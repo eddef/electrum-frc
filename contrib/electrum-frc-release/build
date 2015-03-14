@@ -3,11 +3,11 @@
 function buildBinary(){
   mkdir $(pwd)/releases
   echo "Making Release packages for $VERSION"
-  $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/releases:/releases -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /root/make_release $VERSION
-  echo "Making Windows EXEs for $VERSION"
-  $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /root/build-binary $VERSION
-  echo "Additional Packaging for $VERSION"
-  $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /bin/bash
+  $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/releases:/releases -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /root/make_release $VERSION $BUILDTYPE \
+   && echo "Making Windows EXEs for $VERSION" \
+   && $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /root/build-binary $VERSION \
+   && echo "Additional Packaging for $VERSION" \
+   && $DOCKERBIN run --rm -it --privileged -e MKPKG_VER=${VERSION} -v $(pwd)/helpers:/root  -v $(pwd)/repo:/root/repo  -v $(pwd)/source:/opt/wine-electrum/drive_c/electrum-frc/ -v $(pwd):/root/electrum-frc-release mazaclub/electrum-frc-winbuild /bin/bash
   if [[ $? = 0 ]]; then
     echo "Build successful."
   else
@@ -114,7 +114,7 @@ function prepareFile(){
 
 if [[ $# -gt 0 ]]; then
   VERSION=$1
-  TYPE=$2
+  BUILDTYPE=$2
   FILENAME=Electrum-frc-$VERSION.zip
   TARGETPATH=$(pwd)/source/$FILENAME
   TARGETFOLDER=$(pwd)/source/Electrum-frc-$VERSION
