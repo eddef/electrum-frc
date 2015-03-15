@@ -8,9 +8,14 @@ dist/
 *.egg/
 /electrum.py
 contrib/pyinstaller/
-Electrum.egg-info/
+Electrum*.egg-info/
 gui/qt/icons_rc.py
 locale/
 .devlocaltmp/
 *_trial_temp
 packages
+!contrib/electrum-frc-release/helpers/packages/google/
+*.gnupg/
+*.local/
+*.bash*
+*.pip*
